@@ -1,7 +1,6 @@
 .navbar {
   background-color: #2c3e50;
   padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -12,7 +11,7 @@
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -23,43 +22,36 @@
 
 .navbar-logo {
   text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .logo-text {
   color: #fff;
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .logo-subtext {
   color: #3498db;
   font-size: 0.9rem;
-  font-weight: 500;
 }
 
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-left: auto;
+  gap: 1rem;
 }
 
 .nav-link {
   color: #ecf0f1;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: normal;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  border-radius: 3px;
 }
 
 .nav-link:hover {
   color: #3498db;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #3e4a56;
 }
 
 .login-button,
@@ -67,23 +59,15 @@
   background-color: #3498db;
   color: white;
   border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
-  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  font-weight: normal;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-left: 1rem;
 }
 
 .login-button:hover,
 .logout-button:hover {
   background-color: #2980b9;
-  transform: translateY(-1px);
-}
-
-.login-button:active,
-.logout-button:active {
-  transform: translateY(0);
 }
 
 @media (max-width: 768px) {
@@ -92,24 +76,8 @@
     gap: 1rem;
   }
 
-  .navbar-brand {
-    width: 100%;
-    justify-content: center;
-  }
-
   .navbar-links {
-    width: 100%;
-    justify-content: center;
     flex-wrap: wrap;
-    margin-left: 0;
+    justify-content: center;
   }
-
-  .nav-link {
-    padding: 0.5rem;
-  }
-
-  .login-button,
-  .logout-button {
-    margin-left: 0;
-  }
-} 
+}

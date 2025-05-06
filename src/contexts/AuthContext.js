@@ -57,32 +57,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('Setting up auth state listener');
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('Auth state changed:', user);
-      setCurrentUser(user);
-      setLoading(false);
-    }, (error) => {
-      console.error('Error in auth state listener:', error);
-      setError(error.message);
-    });
-
-    return () => {
-      console.log('Cleaning up auth state listener');
-      unsubscribe();
-    };
+    const unsubscribe = onAuthStateChanged(auth, setCurrentUser, (error) => setError(error.message));
+    setLoading(false);
+    return unsubscribe;
   }, []);
 
-  const value = {
-    currentUser,
-    signup,
-    login,
-    logout,
-    error
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      currentUser,
+      signup,
+      login,
+      logout,
+      error
+    }}>
       {!loading && children}
     </AuthContext.Provider>
   );

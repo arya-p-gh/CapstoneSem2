@@ -5,7 +5,6 @@ const CalorieCounter = () => {
   const [meals, setMeals] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     calories: '',
@@ -15,92 +14,52 @@ const CalorieCounter = () => {
   });
 
   useEffect(() => {
-    const savedMeals = localStorage.getItem('meals');
-    if (savedMeals) {
-      setMeals(JSON.parse(savedMeals));
-    }
+    const savedMeals = JSON.parse(localStorage.getItem('meals')) || [];
+    setMeals(savedMeals);
   }, []);
 
   const searchFood = async () => {
     if (!searchTerm.trim()) return;
 
-    setIsLoading(true);
     try {
       const response = await fetch(
-        `https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}&ingr=${encodeURIComponent(searchTerm)}`
+        `https://api.edamam.com/api/food-database/v2/parser?app_id=YOUR_APP_ID&app_key=YOUR_APP_KEY&ingr=${encodeURIComponent(searchTerm)}`
       );
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch food data.');
 
       const data = await response.json();
-
-      if (!data.hints || data.hints.length === 0) {
-        console.warn('No results found for the search term.');
-        setSearchResults([]);
-        return;
-      }
-
-      const results = data.hints.map((hint) => ({
+      const results = (data.hints || []).map((hint) => ({
         name: hint.food.label,
         calories: Math.round(hint.food.nutrients.ENERC_KCAL || 0),
-        protein: Math.round((hint.food.nutrients.PROCNT || 0) * 10) / 10,
-        carbs: Math.round((hint.food.nutrients.CHOCDF || 0) * 10) / 10,
-        fats: Math.round((hint.food.nutrients.FAT || 0) * 10) / 10,
+        protein: Math.round(hint.food.nutrients.PROCNT || 0),
+        carbs: Math.round(hint.food.nutrients.CHOCDF || 0),
+        fats: Math.round(hint.food.nutrients.FAT || 0)
       }));
 
       setSearchResults(results);
-    } catch (error) {
-      console.error('Error fetching food data:', error.message);
+    } catch {
       setSearchResults([]);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const selectFood = (food) => {
-    setFormData({
-      name: food.name,
-      calories: food.calories,
-      protein: food.protein,
-      carbs: food.carbs,
-      fats: food.fats
-    });
+    setFormData(food);
     setSearchResults([]);
     setSearchTerm('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newMeal = {
-      ...formData,
-      id: Date.now(),
-      date: new Date().toISOString()
-    };
-
+    const newMeal = { ...formData, id: Date.now() };
     const updatedMeals = [...meals, newMeal];
     setMeals(updatedMeals);
     localStorage.setItem('meals', JSON.stringify(updatedMeals));
-
-    setFormData({
-      name: '',
-      calories: '',
-      protein: '',
-      carbs: '',
-      fats: ''
-    });
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ name: '', calories: '', protein: '', carbs: '', fats: '' });
   };
 
   const handleDelete = (id) => {
-    const updatedMeals = meals.filter(meal => meal.id !== id);
+    const updatedMeals = meals.filter((meal) => meal.id !== id);
     setMeals(updatedMeals);
     localStorage.setItem('meals', JSON.stringify(updatedMeals));
   };
@@ -116,41 +75,20 @@ const CalorieCounter = () => {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search for food (e.g., 'apple' or 'chicken')"
+          placeholder="Search for food"
           className="search-input"
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              searchFood();
-            }
-          }}
         />
-        <button onClick={searchFood} className="search-button">
-          Search
-        </button>
+        <button onClick={searchFood} className="search-button">Search</button>
       </div>
 
       {searchResults.length > 0 && (
         <div className="search-results">
-          <h3>Search Results</h3>
           {searchResults.map((food, index) => (
-            <div
-              key={index}
-              className="search-result-item"
-              onClick={() => selectFood(food)}
-            >
+            <div key={index} className="search-result-item" onClick={() => selectFood(food)}>
               <h4>{food.name}</h4>
-              <p>
-                Calories: {food.calories} | Protein: {food.protein}g | Carbs: {food.carbs}g | Fat: {food.fats}g
-              </p>
+              <p>Calories: {food.calories} | Protein: {food.protein}g | Carbs: {food.carbs}g | Fats: {food.fats}g</p>
             </div>
           ))}
-        </div>
-      )}
-
-      {isLoading && (
-        <div className="loading">
-          <p>Searching for food items...</p>
         </div>
       )}
 
@@ -159,7 +97,7 @@ const CalorieCounter = () => {
           type="text"
           name="name"
           value={formData.name}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Meal Name"
           required
         />
@@ -167,7 +105,7 @@ const CalorieCounter = () => {
           type="number"
           name="calories"
           value={formData.calories}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
           placeholder="Calories"
           required
         />
@@ -175,7 +113,7 @@ const CalorieCounter = () => {
           type="number"
           name="protein"
           value={formData.protein}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, protein: e.target.value })}
           placeholder="Protein (g)"
           required
         />
@@ -183,7 +121,7 @@ const CalorieCounter = () => {
           type="number"
           name="carbs"
           value={formData.carbs}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, carbs: e.target.value })}
           placeholder="Carbs (g)"
           required
         />
@@ -191,7 +129,7 @@ const CalorieCounter = () => {
           type="number"
           name="fats"
           value={formData.fats}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, fats: e.target.value })}
           placeholder="Fats (g)"
           required
         />
@@ -199,23 +137,17 @@ const CalorieCounter = () => {
       </form>
 
       <div className="total-calories">
-        <h3>Total Calories Today: {totalCalories}</h3>
+        <h3>Total Calories: {totalCalories}</h3>
       </div>
 
       <div className="meals-list">
-        <h3>Today's Meals</h3>
         {meals.map((meal) => (
           <div key={meal.id} className="meal-item">
-            <div className="meal-info">
+            <div>
               <h4>{meal.name}</h4>
               <p>Calories: {meal.calories}</p>
-              <p>Protein: {meal.protein}g</p>
-              <p>Carbs: {meal.carbs}g</p>
-              <p>Fats: {meal.fats}g</p>
             </div>
-            <button onClick={() => handleDelete(meal.id)} className="delete-btn">
-              Delete
-            </button>
+            <button onClick={() => handleDelete(meal.id)} className="delete-btn">Delete</button>
           </div>
         ))}
       </div>

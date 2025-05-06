@@ -12,11 +12,12 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       await login(email, password);
       navigate('/');
-    } catch (error) {
-      setError(error.message);
+    } catch {
+      setError('Invalid email or password.');
     }
   };
 
@@ -48,19 +49,15 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="auth-button">
-            Sign In
-          </button>
+          <button type="submit" className="auth-button">Sign In</button>
         </form>
         <p className="auth-text">
           Don't have an account?{' '}
-          <Link to="/register" className="auth-link">
-            Register
-          </Link>
+          <Link to="/register" className="auth-link">Register</Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default Login; 
+export default Login;

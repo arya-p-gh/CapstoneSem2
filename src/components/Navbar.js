@@ -22,7 +22,6 @@ const Navbar = () => {
         <div className="navbar-brand">
           <Link to="/" className="navbar-logo">
             <span className="logo-text">Fittr</span>
-            <span className="logo-subtext">Health & Nutrition</span>
           </Link>
         </div>
         

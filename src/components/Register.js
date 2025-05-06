@@ -22,13 +22,6 @@ const Register = () => {
       setLoading(false);
       return;
     }
-
-    if (password.length < 6) {
-      setError('Password should be at least 6 characters');
-      setLoading(false);
-      return;
-    }
-
     try {
       console.log('Attempting to register with:', { email, password });
       const result = await signup(email, password);

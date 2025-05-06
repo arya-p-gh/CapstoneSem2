@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './CalorieCounter.css';
-
-const NUTRITIONIX_APP_ID = 'f1f51eb16cdbb315c95b2c74a274ee4e';
-const NUTRITIONIX_API_KEY = '9c0ba158';
 
 const CalorieCounter = () => {
   const [meals, setMeals] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     calories: '',
@@ -27,43 +23,49 @@ const CalorieCounter = () => {
 
   const searchFood = async () => {
     if (!searchTerm.trim()) return;
-    
-    setLoading(true);
+
+    setIsLoading(true);
     try {
-      const response = await axios.post(
-        'https://trackapi.nutritionix.com/v2/natural/nutrients',
-        { query: searchTerm },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-id': NUTRITIONIX_APP_ID,
-            'x-app-key': NUTRITIONIX_API_KEY
-          }
-        }
+      const response = await fetch(
+        `https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.REACT_APP_EDAMAM_APP_ID}&app_key=${process.env.REACT_APP_EDAMAM_APP_KEY}&ingr=${encodeURIComponent(searchTerm)}`
       );
-      
-      if (response.data && response.data.foods && response.data.foods.length > 0) {
-        setSearchResults(response.data.foods);
-      } else {
-        setSearchResults([]);
-        alert('No results found. Try a different search term.');
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
       }
+
+      const data = await response.json();
+
+      if (!data.hints || data.hints.length === 0) {
+        console.warn('No results found for the search term.');
+        setSearchResults([]);
+        return;
+      }
+
+      const results = data.hints.map((hint) => ({
+        name: hint.food.label,
+        calories: Math.round(hint.food.nutrients.ENERC_KCAL || 0),
+        protein: Math.round((hint.food.nutrients.PROCNT || 0) * 10) / 10,
+        carbs: Math.round((hint.food.nutrients.CHOCDF || 0) * 10) / 10,
+        fats: Math.round((hint.food.nutrients.FAT || 0) * 10) / 10,
+      }));
+
+      setSearchResults(results);
     } catch (error) {
-      console.error('Error searching food:', error);
-      alert('Error searching food. Please try again.');
+      console.error('Error fetching food data:', error.message);
       setSearchResults([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const selectFood = (food) => {
     setFormData({
-      name: food.food_name,
-      calories: Math.round(food.nf_calories),
-      protein: Math.round(food.nf_protein),
-      carbs: Math.round(food.nf_total_carbohydrate),
-      fats: Math.round(food.nf_total_fat)
+      name: food.name,
+      calories: food.calories,
+      protein: food.protein,
+      carbs: food.carbs,
+      fats: food.fats
     });
     setSearchResults([]);
     setSearchTerm('');
@@ -76,11 +78,11 @@ const CalorieCounter = () => {
       id: Date.now(),
       date: new Date().toISOString()
     };
-    
+
     const updatedMeals = [...meals, newMeal];
     setMeals(updatedMeals);
     localStorage.setItem('meals', JSON.stringify(updatedMeals));
-    
+
     setFormData({
       name: '',
       calories: '',
@@ -108,13 +110,13 @@ const CalorieCounter = () => {
   return (
     <div className="calorie-counter">
       <h2>Calorie Counter</h2>
-      
+
       <div className="search-container">
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search for food (e.g., 'apple' or 'chicken breast')"
+          placeholder="Search for food (e.g., 'apple' or 'chicken')"
           className="search-input"
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
@@ -123,8 +125,8 @@ const CalorieCounter = () => {
             }
           }}
         />
-        <button onClick={searchFood} className="search-button" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
+        <button onClick={searchFood} className="search-button">
+          Search
         </button>
       </div>
 
@@ -132,23 +134,26 @@ const CalorieCounter = () => {
         <div className="search-results">
           <h3>Search Results</h3>
           {searchResults.map((food, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="search-result-item"
               onClick={() => selectFood(food)}
             >
-              <h4>{food.food_name}</h4>
+              <h4>{food.name}</h4>
               <p>
-                Calories: {Math.round(food.nf_calories)} | 
-                Protein: {Math.round(food.nf_protein)}g | 
-                Carbs: {Math.round(food.nf_total_carbohydrate)}g | 
-                Fat: {Math.round(food.nf_total_fat)}g
+                Calories: {food.calories} | Protein: {food.protein}g | Carbs: {food.carbs}g | Fat: {food.fats}g
               </p>
             </div>
           ))}
         </div>
       )}
-      
+
+      {isLoading && (
+        <div className="loading">
+          <p>Searching for food items...</p>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="meal-form">
         <input
           type="text"
@@ -218,4 +223,4 @@ const CalorieCounter = () => {
   );
 };
 
-export default CalorieCounter; 
+export default CalorieCounter;

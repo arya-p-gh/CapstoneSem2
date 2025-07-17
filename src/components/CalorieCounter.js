@@ -23,19 +23,19 @@ const CalorieCounter = () => {
 
     try {
       const response = await fetch(
-        `https://api.edamam.com/api/food-database/v2/parser?app_id=YOUR_APP_ID&app_key=YOUR_APP_KEY&ingr=${encodeURIComponent(searchTerm)}`
+        `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(searchTerm)}&search_simple=1&action=process&json=1`
       );
 
       if (!response.ok) throw new Error('Failed to fetch food data.');
 
       const data = await response.json();
-      const results = (data.hints || []).map((hint) => ({
-        name: hint.food.label,
-        calories: Math.round(hint.food.nutrients.ENERC_KCAL || 0),
-        protein: Math.round(hint.food.nutrients.PROCNT || 0),
-        carbs: Math.round(hint.food.nutrients.CHOCDF || 0),
-        fats: Math.round(hint.food.nutrients.FAT || 0)
-      }));
+      const results = (data.products || []).map((product) => ({
+        name: product.product_name || product.generic_name || 'Unknown',
+        calories: Math.round(product.nutriments?.['energy-kcal_100g'] || 0),
+        protein: Math.round(product.nutriments?.['proteins_100g'] || 0),
+        carbs: Math.round(product.nutriments?.['carbohydrates_100g'] || 0),
+        fats: Math.round(product.nutriments?.['fat_100g'] || 0)
+      })).filter(food => food.name && (food.calories || food.protein || food.carbs || food.fats));
 
       setSearchResults(results);
     } catch {

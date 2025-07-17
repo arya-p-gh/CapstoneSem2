@@ -9,7 +9,7 @@ import MealPlanner from './components/MealPlanner';
 import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
-
+import FloatingAIChat from './components/FloatingAIChat';
 
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useAuth();
@@ -45,6 +45,7 @@ function App() {
             </Routes>
           </div>
         </div>
+        <FloatingAIChat />
       </Router>
     </AuthProvider>
   );

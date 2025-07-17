@@ -6,52 +6,41 @@ const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/
 
 function FloatingAIChat() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: 'ai', text: 'Hi! I\'m your AI assistant. How can I help you today?' }
-  ]);
+  const [messages, setMessages] = useState([{ sender: 'ai', text: "Hi! I'm your AI assistant. How can I help you today?" }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    if (open && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, open]);
+  useEffect(() => { if (open && messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' }); }, [messages, open]);
 
-  const sendMessage = async (e) => {
+  const sendMessage = async e => {
     e.preventDefault();
     if (!input.trim()) return;
-    const userMessage = { sender: 'user', text: input };
-    setMessages((msgs) => [...msgs, userMessage]);
+    setMessages(msgs => [...msgs, { sender: 'user', text: input }]);
     setInput('');
     setLoading(true);
     try {
       const res = await fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: input }] }]
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: input }] }] })
       });
       const data = await res.json();
       const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not understand.';
-      setMessages((msgs) => [...msgs, { sender: 'ai', text: aiText }]);
-    } catch (err) {
-      setMessages((msgs) => [...msgs, { sender: 'ai', text: 'Error connecting to AI service.' }]);
+      setMessages(msgs => [...msgs, { sender: 'ai', text: aiText }]);
+    } catch {
+      setMessages(msgs => [...msgs, { sender: 'ai', text: 'Error connecting to AI service.' }]);
     }
     setLoading(false);
   };
 
   return (
     <div>
-      {/* Floating Chat Icon */}
       {!open && (
         <button className="floating-ai-chat-icon" onClick={() => setOpen(true)} title="Chat with AI">
           <span role="img" aria-label="chat">💬</span>
         </button>
       )}
-      {/* Chat Window */}
       {open && (
         <div className="floating-ai-chat-window">
           <div className="floating-ai-chat-header">

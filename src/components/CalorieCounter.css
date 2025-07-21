@@ -1,0 +1,161 @@
+.calorie-counter {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: #181a20;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+  color: #f1f1f1;
+}
+
+.search-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.7rem;
+  border: 1.5px solid #23242b;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #23242b;
+  color: #f1f1f1;
+  outline: none;
+  transition: border 0.2s;
+}
+.search-input:focus {
+  border: 1.5px solid #4f8cff;
+}
+
+.search-button {
+  padding: 0.7rem 1.2rem;
+  background: linear-gradient(90deg, #4f8cff 0%, #3358ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.search-button:hover {
+  background: linear-gradient(90deg, #3358ff 0%, #4f8cff 100%);
+}
+
+.search-results {
+  background: #23242b;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+
+.search-result-item {
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid #292b33;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.search-result-item:last-child {
+  border-bottom: none;
+}
+.search-result-item:hover {
+  background: #232b3b;
+}
+.search-result-item h4 {
+  margin: 0;
+  color: #4f8cff;
+}
+.search-result-item p {
+  margin: 0;
+  color: #b0b8c1;
+  font-size: 0.95rem;
+}
+
+.meal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1rem;
+  background: #23242b;
+  border-radius: 10px;
+  margin-bottom: 1.2rem;
+}
+.meal-form input {
+  padding: 0.7rem;
+  border: 1.5px solid #292b33;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #181a20;
+  color: #f1f1f1;
+  outline: none;
+  transition: border 0.2s;
+}
+.meal-form input:focus {
+  border: 1.5px solid #4f8cff;
+}
+.meal-form button {
+  padding: 0.7rem;
+  background: linear-gradient(90deg, #4f8cff 0%, #3358ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.meal-form button:hover {
+  background: linear-gradient(90deg, #3358ff 0%, #4f8cff 100%);
+}
+
+.total-calories {
+  background: linear-gradient(90deg, #4f8cff 0%, #3358ff 100%);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+
+.meals-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.meal-item {
+  background: #23242b;
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.meal-info h4 {
+  margin: 0;
+  color: #4f8cff;
+}
+.meal-info p {
+  margin: 0.25rem 0;
+  color: #b0b8c1;
+}
+.delete-btn {
+  padding: 0.5rem 1rem;
+  background: #ff4f4f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+.delete-btn:hover {
+  background: #d13a3a;
+}

@@ -54,3 +54,45 @@
   margin: 0 auto;
   padding: 1rem;
 }
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #101014;
+  color: #f1f1f1;
+  min-height: 100vh;
+}
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+@media (max-width: 900px) {
+  html { font-size: 15px; }
+}
+@media (max-width: 600px) {
+  html { font-size: 14px; }
+  .container { padding: 0 0.5rem; }
+}
+/* Utility classes */
+.hide-on-mobile { display: block; }
+@media (max-width: 600px) {
+  .hide-on-mobile { display: none !important; }
+}
+.show-on-mobile { display: none; }
+@media (max-width: 600px) {
+  .show-on-mobile { display: block !important; }
+}

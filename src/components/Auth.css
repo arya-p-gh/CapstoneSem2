@@ -92,3 +92,17 @@
   font-size: 0.875rem;
   margin-top: 1rem;
 }
+
+@media (max-width: 600px) {
+  .auth-container {
+    padding: 0.5rem;
+    min-height: 90vh;
+  }
+  .auth-card {
+    max-width: 98vw;
+    padding: 1rem;
+  }
+  .auth-title {
+    font-size: 1.1rem;
+  }
+}

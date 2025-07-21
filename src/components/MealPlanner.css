@@ -41,6 +41,20 @@
   }
 }
 
+@media (max-width: 500px) {
+  .meal-planner {
+    padding: 0.5rem;
+    max-width: 100vw;
+  }
+  .day-column {
+    min-width: 120px;
+    padding: 0.7rem 0.5rem 1rem 0.5rem;
+  }
+  .meal-plan-grid {
+    gap: 0.5rem;
+  }
+}
+
 .day-column {
   background: #23242b;
   padding: 1.2rem 1rem 1.5rem 1rem;

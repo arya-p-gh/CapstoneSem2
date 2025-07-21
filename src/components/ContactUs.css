@@ -56,4 +56,21 @@
   color: #28d17c;
   font-weight: 500;
   font-size: 1.05rem;
+}
+
+@media (max-width: 600px) {
+  .contactus-container {
+    max-width: 98vw;
+    padding: 1rem;
+    margin: 1.5rem 0.5rem;
+  }
+  .contactus-form input,
+  .contactus-form textarea {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.7rem;
+  }
+  .contactus-form button {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+  }
 } 

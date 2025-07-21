@@ -33,4 +33,18 @@
   color: #f1f1f1;
   font-size: 1.05rem;
   margin-bottom: 0.4rem;
+}
+
+@media (max-width: 700px) {
+  .aboutus-container {
+    padding: 1rem;
+    margin: 1.5rem 0.5rem;
+    font-size: 1rem;
+  }
+  .aboutus-container h2 {
+    font-size: 1.5rem;
+  }
+  .aboutus-container p {
+    font-size: 1rem;
+  }
 } 
